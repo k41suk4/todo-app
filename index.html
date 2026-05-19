@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apple風TODO</title>
+
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #f5f5f7;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      background: white;
+      width: 400px;
+      padding: 30px;
+      border-radius: 24px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 25px;
+      font-size: 28px;
+      font-weight: 600;
+      color: #1d1d1f;
+    }
+
+    .input-area {
+      display: flex;
+      gap: 10px;
+    }
+
+    input {
+      flex: 1;
+      padding: 14px;
+      border: 1px solid #d2d2d7;
+      border-radius: 12px;
+      font-size: 16px;
+      outline: none;
+    }
+
+    input:focus {
+      border-color: #0071e3;
+    }
+
+    .add-btn {
+      background: #0071e3;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 15px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .add-btn:hover {
+      background: #0062c4;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin-top: 20px;
+    }
+
+    li {
+      background: #f5f5f7;
+      padding: 14px;
+      border-radius: 14px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #1d1d1f;
+      font-size: 16px;
+    }
+
+    .delete-btn {
+      background: #ff3b30;
+      border: none;
+      color: white;
+      padding: 8px 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .delete-btn:hover {
+      background: #d92c23;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <h1>TODO</h1>
+
+    <div class="input-area">
+      <input type="text" id="taskInput" placeholder="やることを入力">
+      <button class="add-btn" onclick="addTask()">追加</button>
+    </div>
+
+    <ul id="taskList"></ul>
+  </div>
+
+  <script>
+    function addTask() {
+      const input = document.getElementById("taskInput");
+
+      if (input.value === "") return;
+
+      const li = document.createElement("li");
+
+      const text = document.createElement("span");
+      text.textContent = input.value;
+
+      const deleteBtn = document.createElement("button");
+      deleteBtn.textContent = "削除";
+      deleteBtn.className = "delete-btn";
+
+      deleteBtn.onclick = function () {
+        li.remove();
+      };
+
+      li.appendChild(text);
+      li.appendChild(deleteBtn);
+
+      document.getElementById("taskList").appendChild(li);
+
+      input.value = "";
+    }
+  </script>
+
+</body>
+</html>
