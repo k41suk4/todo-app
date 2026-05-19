@@ -188,8 +188,18 @@ const provider = new GoogleAuthProvider();
 const loginBtn = document.createElement("button");
 loginBtn.innerText = "Googleでログイン";
 loginBtn.style.marginBottom = "20px";
+const logoutBtn = document.createElement("button");
+logoutBtn.innerText = "ログアウト";
+logoutBtn.style.marginLeft = "10px";
 
+const userText = document.createElement("p");
+
+document.body.prepend(userText);
+document.body.prepend(logoutBtn);
 document.body.prepend(loginBtn);
+
+logoutBtn.style.display = "none";
+
 
 loginBtn.addEventListener("click", async () => {
   try {
@@ -199,13 +209,19 @@ loginBtn.addEventListener("click", async () => {
     console.error(error);
   }
 });
-
+logoutBtn.addEventListener("click", async () => {
+  await signOut(auth);
+});
 onAuthStateChanged(auth, (user) => {
-  if (user) {
-    loginBtn.innerText = `${user.displayName}でログイン中`;
-  } else {
-    loginBtn.innerText = "Googleでログイン";
-  }
+if (user) {
+  userText.innerText = `こんにちは、${user.displayName}`;
+  loginBtn.style.display = "none";
+  logoutBtn.style.display = "inline-block";
+} else {
+  userText.innerText = "";
+  loginBtn.style.display = "inline-block";
+  logoutBtn.style.display = "none";
+}
 });
 </script>
 </body>
