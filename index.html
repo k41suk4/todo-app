@@ -146,15 +146,17 @@
       });
     }
 
-    function addTask() {
+    async function addTask() {
       const input = document.getElementById("taskInput");
 
       if (input.value === "") return;
 
-      tasks.push(input.value);
+      await addDoc(collection(db, "todos"), {
+  text: input.value,
+  uid: auth.currentUser.uid
+});
 
-      saveTasks();
-      renderTasks();
+      
 
       input.value = "";
     }
@@ -171,6 +173,16 @@ import {
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  getDocs,
+  deleteDoc,
+  doc
+  query,
+  where
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 const firebaseConfig = {
   apiKey: "AIzaSyBnxLnNJ3XFF4aMOC38ASvHfrE41PyNvlY",
   authDomain: "todo-app-3faaa.firebaseapp.com",
@@ -182,6 +194,7 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
@@ -212,9 +225,23 @@ loginBtn.addEventListener("click", async () => {
 logoutBtn.addEventListener("click", async () => {
   await signOut(auth);
 });
-onAuthStateChanged(auth, (user) => {
+onAuthStateChanged(auth, async (user) => {
 if (user) {
-  userText.innerText = `こんにちは、${user.displayName}`;
+  const q = query(
+  collection(db, "todos"),
+  where("uid", "==", auth.currentUser.uid)
+);
+
+const querySnapshot = await getDocs(q);
+
+querySnapshot.forEach((docItem) => {
+  const data = docItem.data();
+
+  tasks.push(data.text);
+});
+
+renderTasks();
+    userText.innerText = `こんにちは、${user.displayName}`;
   loginBtn.style.display = "none";
   logoutBtn.style.display = "inline-block";
 } else {
